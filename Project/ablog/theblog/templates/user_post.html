@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %} My Blog {% endblock %}
+
+{% block content %}
+<br>
+<h1>Post</h1>
+<ul>
+    {% for post in object_list %}
+    <!-- <a href="{% url 'article-detail' post.pk %}">{{ post.title }}</a> by {{ post.author }}
+    {% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+    <small>( <a href="{% url 'update_post' post.pk %}">Edit</a> )
+        ( <a href="{% url 'delete_post' post.pk %}">Delete</a> )</small>
+    {%endif%}
+    {%endif%}
+    <br>
+    {{ post.snippet|slice:":200"|safe }}
+    <hr> -->
+    {% if user.id == post.author.id %}
+    <br>
+    <div class="card" style="background-color: #F4F5F7;">
+        <div class=" card-body">
+            <h5 class="card-title"><a href="{% url 'article-detail' post.pk %}">{{ post.title }}</a></h5>
+            <h6 class="card-subtitle mb-2 text-muted">by <img src="" alt=""> {{ post.author.first_name }}</h6>
+
+            <p class="card-text">{{ post.snippet|slice:":200"|safe }}
+                content.</p>
+            {% if user.is_authenticated %}
+            {% if user.id == post.author.id %}
+            <a href="{% url 'update_post' post.pk %}" class="card-link">Edit</a>
+            <a href="{% url 'delete_post' post.pk %}" class="card-link" style="color: red;">Delete</a>
+            {%endif%}
+            {%endif%}
+            <!-- {{user.profile.user}} <br>
+            {{user.profile.bio}} <br> -->
+            <!-- {{user.profile.instagram_url}} <br> -->
+            <!-- {%if post.author.profile.profile_pic%}
+            <img src="{{post.author.profile.profile_pic.url}}" alt=""> <br>
+            {%endif%} -->
+        </div>
+    </div>
+    {%endif%}
+    {% endfor %}
+</ul>
+{{post.author.first_name}}
+{% endblock %}

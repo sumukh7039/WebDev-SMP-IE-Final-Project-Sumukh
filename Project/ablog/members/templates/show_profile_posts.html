@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %} My Blog {% endblock %}
+{% load static %}
+{% block content %}
+<br>
+<h2>Profile</h2>
+
+{% for p in profiles %}
+{% if p.user.id == id %}
+<div class="card mb-3" style="background-color: #EFF0F5;">
+    <div class="row g-0">
+        <div class="col-md-2">
+            {%if p.user.profile.profile_pic %}
+            <img src={{p.user.profile.profile_pic.url}} width=180, class="img-fluid rounded-circle">
+            {%else%}
+            <img src="{% static 'theblog/another.jpg' %}" alt="Profile_Pic alt" width=180,
+                class="img-fluid rounded-circle">
+            {%endif%}
+
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{p.user.profile.user.first_name}}
+                    <!-- {{p.user.id}}{{p.user.profile.user.id}} -->
+                </h5>
+                <!-- <p class="small text-muted"></p>
+                            <a href="{%url 'show_profile_page' p.user.profile.id%}">Profile</a> | -->
+
+                <!-- <a href="{% url 'show_profile_posts' p.user.id %}"> Posts</a> -->
+
+                {%if p.user.profile.instagram_url %}
+                <a href="{{p.user.profile.instagram_url}}" target="_blank"><img
+                        src="{% static 'theblog/instagram.jpg' %}" width="20" alt=""></a>
+
+                {%endif%}
+                {%if p.user.profile.twitter_url %}
+                |&nbsp;<a href="{{p.user.profile.twitter_url}}" target="_blank"><img
+                        src="{% static 'theblog/twitter.png' %}" width="20" alt=""></a>&nbsp;
+
+                {%endif%}
+
+                {%if p.user.profile.facebook_url %}
+                |<a href="{{p.user.profile.facebook_url}}" target="_blank"><img
+                        src="{% static 'theblog/facebook.png' %}" width="20" alt=""></a>
+
+                {%endif%}
+
+                <p class="card-text">{{p.user.profile.bio}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{%endif%}
+{%endfor%}
+<h3>Posts</h3>
+{% for post in profile_posts %}
+{% if id == post.author.id %}
+<div class="card" style="background-color: #F4F5F7;">
+    <div class=" card-body">
+        <h5 class="card-title"><a href="{% url 'article-detail' post.pk %}">{{ post.title }}</a></h5>
+        <h6 class="card-subtitle mb-2 text-muted">by <img src="" alt=""> {{ post.author.first_name }}</h6>
+
+        <p class="card-text">{{ post.snippet|slice:":200"|safe }}
+            content.</p>
+        {% if user.is_authenticated %}
+        {% if user.id == post.author.id %}
+        <a href="{% url 'update_post' post.pk %}" class="card-link">Edit</a>
+        <a href="{% url 'delete_post' post.pk %}" class="card-link" style="color: red;">Delete</a>
+        {%endif%}
+        {%endif%}
+
+    </div>
+</div>
+<br>
+{%endif%}
+{%endfor%}
+{% endblock %}
